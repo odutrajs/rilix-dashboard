@@ -19,15 +19,17 @@ Interface administrativa para gestão de **notícias** no sistema Rilix. Criada 
 
 ## 📁 Estrutura de pastas
 
+```text
 src/
-├── components/ # Componentes reutilizáveis (botões, inputs, etc.)
+├── components/              # Componentes reutilizáveis (botões, inputs, etc.)
 ├── pages/
-│ └── news/ # Página de listagem, criação e edição de notícias
-│ ├── services/ # Serviços de API (get, post, delete)
-│ ├── components/ # Componentes específicos da feature
-│ └── index.tsx # Página principal
-├── types/ # Tipagens globais
-└── utils/ # Funções auxiliares
+│   └── news/                # Página de listagem, criação e edição de notícias
+│       ├── services/        # Serviços de API (get, post, delete)
+│       ├── components/      # Componentes específicos da feature
+│       └── index.tsx        # Página principal
+├── types/                   # Tipagens globais
+└── utils/                   # Funções auxiliares
+
 
 ## 🚀 Como rodar o projeto
 
@@ -76,3 +78,4 @@ docker build -t rilix-dashboard-frontend .
 docker run -p 4173:4173 rilix-dashboard-frontend
 
 A aplicação ficará disponível em: http://localhost:4173
+```
