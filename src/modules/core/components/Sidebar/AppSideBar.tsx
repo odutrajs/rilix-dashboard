@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const items = [
   {
@@ -53,35 +54,33 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <div className="mt-auto px-4 pb-4">
+        <div className="mt-auto px-4 pb-4 pt-4 border-t border-border">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="flex items-center gap-3 cursor-pointer p-2 rounded-md">
-                <img
-                  src="/avatar.jpg"
-                  alt="Avatar"
-                  className="w-8 h-8 rounded-full"
-                />
+              <div className="flex items-center gap-3 cursor-pointer p-2 rounded-md hover:bg-[#5B9DF8]">
+                <Avatar>
+                  <AvatarImage src="/avatar.jpg" />
+                  <AvatarFallback>JR</AvatarFallback>
+                </Avatar>
                 <div className="flex flex-col text-left">
                   <span className="text-sm font-medium">Emerson Freitas</span>
                   <span className="text-xs opacity-80">
-                    EmersonFreitas@rilix.com
+                    Emerson.freitas@rilix.com
                   </span>
                 </div>
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
+            <DropdownMenuContent align="start" className="w-56">
               <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
               <DropdownMenuItem>
                 <User className="w-4 h-4 mr-2" />
                 Perfil
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-red-600">
                 <LogOut className="w-4 h-4 mr-2" />
                 Sair
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem disabled>Versão 1.0.0</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

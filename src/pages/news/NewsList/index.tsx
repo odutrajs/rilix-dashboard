@@ -1,4 +1,4 @@
-import NewsPage from "@/modules/news";
+import NewsPage from "@/modules/news/NewsList";
 
 const News = () => {
   return <NewsPage />;
