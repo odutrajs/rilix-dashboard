@@ -1,69 +1,78 @@
-# React + TypeScript + Vite
+# 📰 Rilix Dashboard – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface administrativa para gestão de **notícias** no sistema Rilix. Criada com **React + Vite**, integra operações de **CRUD** com upload de imagem, visualização em cards e listagem em tabela, com suporte a **modais responsivos**, **validações**, e **feedbacks visuais**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Tecnologias utilizadas
 
-## Expanding the ESLint configuration
+- ⚛️ **React 18**
+- ⚡ **Vite**
+- 💅 **Tailwind CSS + ShadCN (Radix UI)**
+- 🔥 **TanStack React Query**
+- 🛠 **Zod + React Hook Form** para validação e formulários
+- 📦 **Vitest + Testing Library** para testes unitários
+- 📸 **TestCafe** para testes end-to-end
+- 🍞 **Sonner** para toasts e feedbacks
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📁 Estrutura de pastas
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+src/
+├── components/ # Componentes reutilizáveis (botões, inputs, etc.)
+├── pages/
+│ └── news/ # Página de listagem, criação e edição de notícias
+│ ├── services/ # Serviços de API (get, post, delete)
+│ ├── components/ # Componentes específicos da feature
+│ └── index.tsx # Página principal
+├── types/ # Tipagens globais
+└── utils/ # Funções auxiliares
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🚀 Como rodar o projeto
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 1. Instale as dependências
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+npm install
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 1. Execute o servidor de desenvolvimento
+
+npm run dev
+
+## 🧪 Testes
+
+### 1. Testes unitários (Vitest)
+
+npm run test
+
+### 1. Testes end-to-end (TestCafe)
+
+npx testcafe chrome tests/news.test.ts
+
+## 🛠 Funcionalidades
+
+Listagem de notícias com tabela e ações de edição/exclusão
+
+Visualização em cards com modal detalhado
+
+Criação de notícia com upload de imagem e formulário validado
+
+Edição da notícia com pré-visualização da imagem existente
+
+Feedbacks com sonner para sucesso/erro
+
+Tabela responsiva com scroll horizontal
+
+Responsividade e acessibilidade garantidas
+
+## 🛠 Executar com Docker
+
+# Build da imagem
+
+docker build -t rilix-dashboard-frontend .
+
+# Execução do container
+
+docker run -p 4173:4173 rilix-dashboard-frontend
+
+A aplicação ficará disponível em: http://localhost:4173
