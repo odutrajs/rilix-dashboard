@@ -1,4 +1,4 @@
-import { Selector } from "testcafe";
+import { fixture, Selector } from "testcafe";
 
 fixture("Teste noticias").page("http://localhost:5173/news/");
 
