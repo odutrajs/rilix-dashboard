@@ -1,57 +1,95 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getNewsById } from "./services/getNewsById";
+import NewsEditSkeleton from "./components/NewsEditSkeleton";
+import { updateNews } from "./services/updateNews";
+import { toast } from "sonner";
+import { Switch } from "@/components/ui/switch";
 
 const newsSchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
   resume: z.string().min(1, "Resumo é obrigatório"),
   description: z.string().min(1, "Descrição é obrigatória"),
-  imageKey: z.string().min(1, "Chave da imagem é obrigatória"),
+  isActive: z.boolean(),
 });
 
 type NewsFormData = z.infer<typeof newsSchema>;
 
-const MOCK_NEWS = [
-  {
-    id: "8",
-    createdAt: "2025-06-09T17:53:10.137Z",
-    isActive: true,
-    imageKey: "b3496682",
-    title: "Novo Rilix Coaster",
-    resume: "Rilix Coaster versão 4.0 chega ao mercado em janeiro de 2026.",
-    description:
-      "Com novos cenários imersivos, tecnologia aprimorada e ainda mais emoção, a Rilix Coaster 4.0 será lançada oficialmente em janeiro de 2026.",
-  },
-];
-
 export default function NewsEditPage() {
   const { id } = useParams<{ id: string }>();
-  const news = MOCK_NEWS.find((n) => n.id === id);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const navigate = useNavigate();
+
+  const { data: news, isLoading } = useQuery({
+    queryKey: ["news", id],
+    queryFn: () => getNewsById(id!),
+    enabled: !!id,
+  });
 
   const {
     register,
     handleSubmit,
+    reset,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<NewsFormData>({
     resolver: zodResolver(newsSchema),
     defaultValues: {
-      title: news?.title || "",
-      resume: news?.resume || "",
-      description: news?.description || "",
-      imageKey: news?.imageKey || "",
+      isActive: true,
     },
   });
 
-  const onSubmit = (data: NewsFormData) => {
-    console.log("Notícia atualizada:", data);
+  useEffect(() => {
+    if (news) {
+      reset({
+        title: news.title,
+        resume: news.resume,
+        description: news.description,
+        isActive: news.isActive ?? true,
+      });
+
+      setPreview(`${import.meta.env.VITE_API_URL}/uploads/${news.imageKey}`);
+      setImageFile(null);
+    }
+  }, [news, reset]);
+
+  const mutation = useMutation({
+    mutationFn: updateNews,
+    onSuccess: () => {
+      toast.success("Notícia atualizada com sucesso!");
+      navigate("/news");
+    },
+    onError: () => {
+      toast.error("Erro ao atualizar notícia.");
+    },
+  });
+
+  const onSubmit = async (data: NewsFormData) => {
+    mutation.mutate({
+      id: id!,
+      title: data.title,
+      resume: data.resume,
+      description: data.description,
+      imageFile: imageFile || undefined,
+      isActive: data.isActive,
+    });
   };
+
+  if (isLoading) {
+    return <NewsEditSkeleton />;
+  }
 
   if (!news) {
     return <div className="p-6">Notícia não encontrada.</div>;
@@ -100,13 +138,46 @@ export default function NewsEditPage() {
             </div>
 
             <div>
-              <Label htmlFor="imageKey">Chave da Imagem</Label>
-              <Input id="imageKey" {...register("imageKey")} />
-              {errors.imageKey && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.imageKey.message}
-                </p>
+              <Label className="block mb-2">Imagem atual</Label>
+              {preview && (
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="mb-4 w-full h-150 object-cover rounded-md border"
+                />
               )}
+
+              <Input
+                id="imageFile"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setImageFile(file);
+                    setPreview(URL.createObjectURL(file));
+                  }
+                }}
+              />
+
+              <Label
+                htmlFor="imageFile"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-input bg-transparent text-foreground rounded-md cursor-pointer hover:bg-accent hover:text-accent-foreground text-sm transition"
+              >
+                Selecionar nova imagem
+              </Label>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <Label htmlFor="isActive">Ativar notícia</Label>
+              <Switch
+                id="isActive"
+                checked={watch("isActive")}
+                onCheckedChange={(value) => {
+                  setValue("isActive", value);
+                }}
+              />
             </div>
 
             <Button type="submit" disabled={isSubmitting}>

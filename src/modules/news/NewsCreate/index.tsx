@@ -18,6 +18,10 @@ import { ImagePlus } from "lucide-react";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { CreateNewsPayload, postCreateNews } from "./services/createNews";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const newsSchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
@@ -33,12 +37,14 @@ type FormData = z.infer<typeof newsSchema>;
 
 export default function NewsCreatePage() {
   const [preview, setPreview] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    trigger,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(newsSchema),
@@ -47,19 +53,40 @@ export default function NewsCreatePage() {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: (payload: CreateNewsPayload) => postCreateNews(payload),
+    onSuccess: () => {
+      toast.success("Notícia criada com sucesso!");
+      navigate("/news");
+    },
+    onError: () => {
+      toast.error("Erro ao criar notícia.");
+    },
+  });
+
   const onSubmit = (data: FormData) => {
     const file = data.imageFile?.[0];
-    console.log("Formulário enviado:", {
-      ...data,
-      imageFile: file,
+
+    if (!file) {
+      toast.error("Imagem obrigatória");
+      return;
+    }
+
+    mutation.mutate({
+      title: data.title,
+      resume: data.resume,
+      description: data.description,
+      imageFile: data.imageFile,
+      isActive: data.isActive,
     });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setValue("imageFile", e.target.files as FileList);
-      setPreview(URL.createObjectURL(file));
+    const fileList = e.target.files;
+    if (fileList && fileList.length > 0) {
+      setValue("imageFile", fileList);
+      trigger("imageFile");
+      setPreview(URL.createObjectURL(fileList[0]));
     }
   };
 
@@ -113,7 +140,7 @@ export default function NewsCreatePage() {
                 <img
                   src={preview}
                   alt="Preview"
-                  className="mb-4 w-full h-52 object-cover rounded-md border"
+                  className="mb-4 w-full h-150 object-cover rounded-md border"
                 />
               ) : (
                 <div className="mb-4 w-full h-52 flex items-center justify-center border border-dashed rounded-md text-muted-foreground text-sm">
@@ -126,7 +153,6 @@ export default function NewsCreatePage() {
                 type="file"
                 accept="image/*"
                 className="hidden"
-                {...register("imageFile")}
                 onChange={handleImageChange}
               />
 

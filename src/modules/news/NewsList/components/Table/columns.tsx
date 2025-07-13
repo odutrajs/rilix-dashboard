@@ -12,7 +12,10 @@ import { Button } from "@/components/ui/button";
 import { News } from "../../types/news.type";
 import { NavigateFunction } from "react-router-dom";
 
-export function getColumns(navigate: NavigateFunction): ColumnDef<News>[] {
+export function getColumns(
+  navigate: NavigateFunction,
+  onDelete: (id: string) => void
+): ColumnDef<News>[] {
   return [
     {
       accessorKey: "title",
@@ -59,7 +62,7 @@ export function getColumns(navigate: NavigateFunction): ColumnDef<News>[] {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-red-600"
-                onClick={() => alert(`Excluir: ${news.id}`)}
+                onClick={() => onDelete(news.id)}
               >
                 Excluir
               </DropdownMenuItem>
