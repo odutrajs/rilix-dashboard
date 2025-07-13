@@ -1,5 +1,5 @@
 import App from "@/App";
-import NewsPage from "@/modules/news";
+import News from "@/assets/pages/News";
 import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -9,7 +9,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/news",
-        element: <NewsPage />,
+        element: <News />,
       },
     ],
   },
