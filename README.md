@@ -29,7 +29,7 @@ src/
 │       └── index.tsx        # Página principal
 ├── types/                   # Tipagens globais
 └── utils/                   # Funções auxiliares
-
+```
 
 ## 🚀 Como rodar o projeto
 
@@ -78,4 +78,7 @@ docker build -t rilix-dashboard-frontend .
 docker run -p 4173:4173 rilix-dashboard-frontend
 
 A aplicação ficará disponível em: http://localhost:4173
+
+```
+
 ```
