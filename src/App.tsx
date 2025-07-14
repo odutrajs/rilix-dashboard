@@ -14,7 +14,7 @@ export default function App() {
         <div className="flex h-screen w-full">
           <AppSidebar />
 
-          <div className="flex flex-1 flex-col overflow-hidden">
+          <div className="flex flex-1 flex-col overflow-hidden pl-5 pt-5">
             <SidebarTrigger />
 
             <main className="flex-1 overflow-y-auto p-6">
