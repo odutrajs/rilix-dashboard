@@ -60,7 +60,7 @@ export default function NewsEditPage() {
         isActive: news.isActive ?? true,
       });
 
-      setPreview(`${import.meta.env.VITE_API_URL}/uploads/${news.imageKey}`);
+      setPreview(`${import.meta.env.VITE_API_URL}uploads/${news.imageKey}`);
       setImageFile(null);
     }
   }, [news, reset]);

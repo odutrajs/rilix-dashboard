@@ -30,7 +30,7 @@ export function NewsModal({ news, onClose }: NewsModalProps) {
             </DialogHeader>
 
             <img
-              src={`${import.meta.env.VITE_API_URL}/uploads/${news.imageKey}`}
+              src={`${import.meta.env.VITE_API_URL}uploads/${news.imageKey}`}
               alt={news.title}
               className="w-full h-64 md:h-150 lg:h-200 object-cover rounded-md"
             />
